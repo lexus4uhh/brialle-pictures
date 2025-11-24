@@ -8,6 +8,16 @@ def braille_to_unicode(dots):
 
     return chr(0x2800 + braille_byte)
 
+def print_symbols(symbols, output_file=None, row_delimiter='\n'):
+    output = []
+    for row in symbols:
+        output.append(''.join(row) + row_delimiter)
+    result = ''.join(output)
+    if output_file:
+        with open(output_file, 'w', encoding='utf-8') as f:
+            f.write(result)
+    print(result)
+
 def get_symbols(path):
     img = Image.open(path)
     img = img.convert("1")
@@ -45,10 +55,7 @@ def get_symbols(path):
 while True:
     try:
         a = get_symbols(input('type in path to image (.png), Ctrl+C to exit\n\n'))
-        for j in a:
-            for i in j:
-                print(i, end='')
-            print()
+        print_symbols(a, input("output path (can be None): "))
     except Exception as e:
         print(f'retry, error: {e}')
     

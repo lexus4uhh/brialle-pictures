@@ -1,9 +1,12 @@
-# Brialle-Pictures Documentation
+# Brialle-Pictures: Image to Braille Art Converter
+**Documentation**
 
 ---
 
-## **1. Overview**
-**Brialle-Pictures** is a Python project that converts images into Braille art. It reads a `.png` image, processes it, and outputs a text file or console representation of the image using Unicode Braille characters. This allows visually impaired users or anyone interested in tactile art to "see" images through touch or text.
+## **1. Introduction**
+**Brialle-Pictures** is a Python-based tool that converts images into tactile Braille art. It processes input images and generates a text-based representation using Unicode Braille characters, making visual content accessible through touch or text.
+
+The project is designed to work with any image format supported by the **Pillow (PIL)** library, including `.png`, `.jpg`, `.bmp`, and more.
 
 ---
 
@@ -16,14 +19,14 @@ Project Structure
 | Directory/File       | Description                                                                 |
 |----------------------|-----------------------------------------------------------------------------|
 | `dist/`              | Contains the compiled executable (`main-by_brialle.exe`).                  |
-| `examples/`          | Sample input images (`input.png`, `input2.png`) and output (`result.png`). |
+| `examples/`          | Sample input images (`input.png`, `input2.png`) and output (`result.txt`). |
 | `src/`               | Source code (`main-by_brialle.py`).                                         |
 
 ---
 
 ## **3. Dependencies**
 - **Python 3.x**
-- **Pillow (PIL)**: For image processing.
+- **Pillow (PIL)**: Required for image processing.
 
 Install Pillow using:
 ```bash
@@ -32,9 +35,9 @@ pip install pillow
 
 ---
 
-## **4. How It Works**
+## **4. Core Functionality**
 
-### **4.1 Core Functions**
+### **4.1 Functions**
 
 #### **`braille_to_unicode(dots)`**
 - **Purpose**: Converts a list of Braille dot positions into a Unicode Braille character.
@@ -53,7 +56,7 @@ pip install pillow
 #### **`get_symbols(path)`**
 - **Purpose**: Converts an image into a 2D list of Braille characters.
 - **Parameters**:
-  - `path`: Path to the input `.png` image.
+  - `path`: Path to the input image (supports `.png`, `.jpg`, `.bmp`, etc.).
 - **Process**:
   1. Opens the image and converts it to black-and-white (1-bit).
   2. Crops the image to ensure its dimensions are multiples of 2 (width) and 4 (height).
@@ -76,15 +79,17 @@ pip install pillow
    ```bash
    python src/main-by_brialle.py
    ```
-   - Enter the path to your `.png` image when prompted.
+   - Enter the path to your image (e.g., `examples/input.png` or `examples/input.jpg`).
    - Optionally, specify an output file path to save the Braille art.
 
 2. **Using the Executable**:
    - Run `dist/main-by_brialle.exe` on Windows.
    - Follow the same prompts as above.
 
+---
+
 ### **5.2 Example Workflow**
-1. Place your input image (e.g., `input.png`) in the `examples/` folder.
+1. Place your input image (e.g., `input.png`, `input.jpg`) in the `examples/` folder.
 2. Run the script or executable.
 3. Enter the path to your image (e.g., `examples/input.png`).
 4. Optionally, specify an output file path (e.g., `examples/result.txt`).
@@ -97,6 +102,14 @@ For an input image like `examples/input.png`, the output will be a text file or 
 
 ---
 
-## **7. Future Improvements**
-- GUI for easier interaction.
-- Options to adjust the Braille dot density or size.
+## **7. Limitations**
+- **Image Size**: The script automatically crops the image so that its width is a multiple of 2 and its height is a multiple of 4. This is required for accurate Braille character mapping.
+- **Color**: The image is converted to black-and-white (1-bit) for processing. Color information is discarded.
+- **Detail**: Highly detailed or complex images may lose clarity when converted to Braille art.
+
+---
+
+## **8. Future Improvements**
+- **GUI**: A graphical user interface for easier interaction.
+- **Customization**: Options to adjust Braille dot density or size.
+- **Batch Processing**: Support for converting multiple images at once.

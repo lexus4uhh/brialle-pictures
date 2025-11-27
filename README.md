@@ -105,6 +105,5 @@ For an input image like `examples/input.png`, the output will be a text file or 
 ---
 
 ## **8. Future Improvements**
-- Support for additional image formats (e.g., `.jpg`, `.bmp`).
 - GUI for easier interaction.
 - Options to adjust the Braille dot density or size.

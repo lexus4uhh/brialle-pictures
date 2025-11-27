@@ -54,7 +54,7 @@ def get_symbols(path):
 
 while True:
     try:
-        a = get_symbols(input('type in path to image (.png), Ctrl+C to exit\n\n'))
+        a = get_symbols(input('type in path to image (.png), Ctrl+C to exit\n'))
         print_symbols(a, input("output path (can be None): "))
     except Exception as e:
         print(f'retry, error: {e}')

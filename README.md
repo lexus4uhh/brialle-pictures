@@ -97,13 +97,6 @@ For an input image like `examples/input.png`, the output will be a text file or 
 
 ---
 
-## **7. Limitations**
-- **Image Size**: The image dimensions must be multiples of 2 (width) and 4 (height). The script automatically crops the image to meet this requirement.
-- **Color**: Only black-and-white images are supported. Color images are converted to 1-bit.
-- **Complexity**: Highly detailed images may not translate well into Braille art.
-
----
-
-## **8. Future Improvements**
+## **7. Future Improvements**
 - GUI for easier interaction.
 - Options to adjust the Braille dot density or size.

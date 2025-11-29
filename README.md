@@ -1,115 +1,216 @@
-# Brialle-Pictures: Image to Braille Art Converter
-**Documentation**
+# Braille Pictures
+
+Convert black–white images into Unicode Braille art that you can view in a terminal, text editor, or screen reader.
+
+This project provides:
+
+- a **GUI app** (`main_GUI.py` / `main_GUI.exe`) to batch–convert images and save the result as `.txt` files  
+- a **CLI app** (`main-by_braille.py` / `main-by_braille.exe`) for quick conversions from the command line  
+- a small **conversion library** (`main_symbs.py`) that does the actual image → braille work
 
 ---
 
-## **1. Introduction**
-**Brialle-Pictures** is a Python-based tool that converts images into tactile Braille art. It processes input images and generates a text-based representation using Unicode Braille characters, making visual content accessible through touch or text.
+## 1. How it works
 
-The project is designed to work with any image format supported by the **Pillow (PIL)** library, including `.png`, `.jpg`, `.bmp`, and more.
+The conversion is based on Unicode Braille characters (U+2800–U+28FF).
+
+- The image is converted to **1-bit black/white**.
+- The image is processed in **blocks of 2×4 pixels**, which map to the 8 dots of a braille cell:
+
+
+(x,   y)   -> dot 1
+(x,   y+1) -> dot 2
+(x,   y+2) -> dot 3
+(x+1, y)   -> dot 4
+(x+1, y+1) -> dot 5
+(x+1, y+2) -> dot 6
+(x,   y+3) -> dot 7
+(x+1, y+3) -> dot 8
+
+````
+
+- For each cell, the corresponding Unicode braille character is computed and added to the output.
+
+The result is a grid of braille characters that visually approximates the original image.
 
 ---
 
-## **2. Project Structure**
+## 2. Project structure
 
+```text
+brialle-pictures/
+├─ dist/
+│  ├─ main_GUI.exe            # Built GUI executable
+│  └─ main-by_braille.exe     # Built CLI executable
+├─ examples/
+│  ├─ input.png
+│  ├─ input2.png
+│  └─ result.png              # Example braille output screenshot
+├─ src/
+ └─ gui/
+    ├─ main_GUI.py          # PyQt5 GUI frontend
+    ├─ main_symbs.py        # Image → braille conversion logic
+    └─ main-by_braille.py   # CLI tool
+````
 
-Project Structure
-
-
-| Directory/File       | Description                                                                 |
-|----------------------|-----------------------------------------------------------------------------|
-| `dist/`              | Contains the compiled executable (`main-by_brialle.exe`).                  |
-| `examples/`          | Sample input images (`input.png`, `input2.png`) and output (`result.txt`). |
-| `src/`               | Source code (`main-by_brialle.py`).                                         |
+> Paths may differ slightly depending on how you cloned / built the project, but the important scripts are `main_GUI.py`, `main-by_braille.py`, and `main_symbs.py`.
 
 ---
 
-## **3. Dependencies**
-- **Python 3.x**
-- **Pillow (PIL)**: Required for image processing.
+## 3. Requirements
 
-Install Pillow using:
+For running from source (Python):
+
+* Python 3.x
+* [Pillow](https://pypi.org/project/Pillow/) (`PIL`)
+* [PyQt5](https://pypi.org/project/PyQt5/) (for the GUI only)
+
+Install with:
+
 ```bash
-pip install pillow
+pip install pillow pyqt5
 ```
 
----
-
-## **4. Core Functionality**
-
-### **4.1 Functions**
-
-#### **`braille_to_unicode(dots)`**
-- **Purpose**: Converts a list of Braille dot positions into a Unicode Braille character.
-- **Parameters**:
-  - `dots`: A list of integers (1-8) representing active Braille dots.
-- **Returns**: A Unicode Braille character.
-
-#### **`print_symbols(symbols, output_file=None, row_delimiter='\n')`**
-- **Purpose**: Prints or saves Braille symbols as text.
-- **Parameters**:
-  - `symbols`: A 2D list of Braille characters.
-  - `output_file`: (Optional) Path to save the output text file.
-  - `row_delimiter`: (Optional) Delimiter for rows (default: newline).
-- **Output**: Prints the Braille art to the console and/or saves it to a file.
-
-#### **`get_symbols(path)`**
-- **Purpose**: Converts an image into a 2D list of Braille characters.
-- **Parameters**:
-  - `path`: Path to the input image (supports `.png`, `.jpg`, `.bmp`, etc.).
-- **Process**:
-  1. Opens the image and converts it to black-and-white (1-bit).
-  2. Crops the image to ensure its dimensions are multiples of 2 (width) and 4 (height).
-  3. Scans the image in 2x4 pixel blocks, converting each block into a Braille character.
-- **Returns**: A 2D list of Braille characters.
+If you only use the **executables** in `dist/`, you do **not** need Python or these packages installed.
 
 ---
 
-### **4.2 Main Loop**
-- The program runs in a loop, prompting the user for an input image path.
-- It processes the image, prints the Braille art, and optionally saves it to a file.
-- The loop exits on `Ctrl+C`.
+## 4. Using the GUI
+
+Script: `src/gui/main_GUI.py`
+Executable (if provided): `dist/main_GUI.exe`
+
+### Run
+
+```bash
+python main_GUI.py
+```
+
+A window titled **“Choosing files and directory”** will appear.
+
+### Steps
+
+1. **Choose files**
+
+   * Click **“Choose files”**.
+   * Select one or more image files.
+   * Supported formats: `*.png`, `*.jpg`, `*.jpeg`, `*.bmp`.
+
+   Selected files are listed in the main window.
+
+2. **Choose output directory**
+
+   * Click **“Choose directory to save in .txt”**.
+   * Pick an existing folder where you want the text files to be written.
+
+   The chosen directory is also displayed in the list.
+
+3. **Run conversion**
+
+   * Click **“Done”**.
+   * For each selected image:
+
+     * The program converts it to braille.
+     * It saves a `.txt` file inside the chosen directory.
+     * The file name is the original image name, but with `.txt`, e.g.
+       `myimage.png` → `myimage.txt`.
+
+No additional prompts will appear; check the output directory for the results.
 
 ---
 
-## **5. Usage**
+## 5. Using the CLI tool
 
-### **5.1 Running the Script**
-1. **From Source**:
-   ```bash
-   python src/main-by_brialle.py
+Script: `src/gui/main-by_braille.py`
+Executable (if provided): `dist/main-by_braille.exe`
+
+### Run
+
+```bash
+python main-by_braille.py
+```
+
+The script enters a loop:
+
+1. It asks for an **input image path**:
+
+   ```text
+   type in path to image (.png), Ctrl+C to exit
    ```
-   - Enter the path to your image (e.g., `examples/input.png` or `examples/input.jpg`).
-   - Optionally, specify an output file path to save the Braille art.
 
-2. **Using the Executable**:
-   - Run `dist/main-by_brialle.exe` on Windows.
-   - Follow the same prompts as above.
+   Enter the full or relative path to an image (PNG/JPG/BMP, etc.).
+
+2. It asks for an **output path**:
+
+   ```text
+   output path (can be None):
+   ```
+
+   * Enter a path to a `.txt` file to save the braille art.
+   * Example: `output.txt`
+   * If you press **Enter** leaving it empty, it will try to open a file named `''` (empty string), so you should usually provide a filename. (You can easily tweak the script to handle `None` if you like.)
+
+3. The tool:
+
+   * Converts the image to braille.
+   * Prints the braille art directly to the terminal.
+   * Writes it to the given output file.
+
+If any error occurs (wrong path, unsupported file, etc.), it prints:
+
+```text
+retry, error: <error message>
+```
+
+Then it asks again for a new image path.
+Press **Ctrl+C** to exit the loop.
 
 ---
 
-### **5.2 Example Workflow**
-1. Place your input image (e.g., `input.png`, `input.jpg`) in the `examples/` folder.
-2. Run the script or executable.
-3. Enter the path to your image (e.g., `examples/input.png`).
-4. Optionally, specify an output file path (e.g., `examples/result.txt`).
-5. View the Braille art in the console or the output file.
+## 6. Library functions (`main_symbs.py`)
+
+You can also import the conversion logic in your own Python code:
+
+```python
+from main_symbs import get_symbols, print_symbols
+
+symbols = get_symbols("path/to/image.png")   # returns a list of rows, each row is a list of braille chars
+print_symbols(symbols)                       # prints to stdout
+print_symbols(symbols, "output.txt")         # saves to a file
+```
+
+### `get_symbols(path: str) -> list[list[str]]`
+
+* Opens the image at `path`.
+* Converts it to 1-bit (black/white).
+* Crops the image so the width is divisible by 2 and the height by 4.
+* Returns a 2D list (rows of braille characters).
+
+### `print_symbols(symbols, output_file=None, row_delimiter='\n')`
+
+* Takes the `symbols` returned by `get_symbols`.
+* Joins each row into a string, separated by `row_delimiter` (default: newline).
+* If `output_file` is given, writes the full braille art to that file (UTF-8).
 
 ---
 
-## **6. Example Output**
-For an input image like `examples/input.png`, the output will be a text file or console output resembling the image, composed of Braille characters.
+## 7. Notes & limitations
+
+* The algorithm currently assumes **dark pixels are “on” dots** and white pixels are background.
+* For best results:
+
+  * Use **high-contrast black and white** images.
+  * Simple shapes, text, or logos tend to look better in braille.
+* The cropping to multiples of 2×4 pixels is automatic; any extra pixels at the edges are discarded.
 
 ---
 
-## **7. Limitations**
-- **Image Size**: The script automatically crops the image so that its width is a multiple of 2 and its height is a multiple of 4. This is required for accurate Braille character mapping.
-- **Color**: The image is converted to black-and-white (1-bit) for processing. Color information is discarded.
-- **Detail**: Highly detailed or complex images may lose clarity when converted to Braille art.
+
+## 8. Future ideas
+
+Some ideas you might want to add later:
+
+* Preview inside the GUI.
+* Drag-and-drop image support.
 
 ---
-
-## **8. Future Improvements**
-- **GUI**: A graphical user interface for easier interaction.
-- **Customization**: Options to adjust Braille dot density or size.
-- **Batch Processing**: Support for converting multiple images at once.

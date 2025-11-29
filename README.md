@@ -50,7 +50,7 @@ brialle-pictures/
  └─ gui/
     ├─ main_GUI.py          # PyQt5 GUI frontend
     ├─ main_symbs.py        # Image → braille conversion logic
-    └─ main-by_braille.py   # CLI tool
+    main-by_braille.py      # CLI tool
 ````
 
 > Paths may differ slightly depending on how you cloned / built the project, but the important scripts are `main_GUI.py`, `main-by_braille.py`, and `main_symbs.py`.
